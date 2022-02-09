@@ -8,7 +8,7 @@ export const MetaMaskNotFound = () => {
         <Result
             icon={<AlertOutlined />}
             title="Please install MetaMask."
-            subTitle="You will be redirected to the Metamask"
+            subTitle="You will be redirected to the https://metamask.io"
             extra={
                 <Button 
                     type="primary" 
