@@ -4,7 +4,8 @@ import React, { createContext, useContext, useReducer } from 'react';
 
 const initialContext = {
     balance: null,
-    transaction:null
+    transaction:null, 
+    available: null
 };
 
 const appReducer = (state, { type, payload }) => {
@@ -20,6 +21,11 @@ const appReducer = (state, { type, payload }) => {
             return {
                 ...state,
                 transaction: payload,
+            };
+        case TYPES.setAvailable:
+            return {
+                ...state,
+                available: payload,
             };
         default:
             return state;
@@ -51,6 +57,14 @@ export const AppContextProvider = ({ children }) => {
             });
         },
 
+        available: store.available,
+        setAvailable: ( available ) => {
+            dispatch({
+                type: TYPES.setAvailable,
+                payload: available
+            })
+        }      
+
   };
 
   return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>;
@@ -59,4 +73,5 @@ export const AppContextProvider = ({ children }) => {
 const TYPES = {
     setBalance:               'Set Ethereum Balance',
     setTransaction:           'Set Data transaction',  
+    setAvailable:             'Set Survey Available', 
 }
