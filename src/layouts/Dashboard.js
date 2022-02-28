@@ -1,60 +1,121 @@
-import React, { useEffect, useState } from "react";
-import { Layout, Menu } from 'antd';
-import { PageHeader } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import React, { useEffect } from "react";
 
-import { ButtonMetamask } from "../components/Button/ButtonMetamask";
-import  useContract  from "../hooks/useContract"
+import { Layout } from 'antd';
+import { Modal } from "antd";
+
+import useContract from "../hooks/useContract"
 import { useSurvey } from "../hooks/useSurvey"
-import { useAppContext } from "../AppContext";
 
-const { Header, Content } = Layout;
+import { HomeView } from "../views/HomeView";
+import { SurveysNotFound } from "../views/Errors/SurveysNotFound";
+import { NavBar } from "../components/Navbar/NavBar";
+
+import { useAppContext } from "../AppContext";
+import { FormSurvey } from "../views/FormSurvey";
+
+const { Content } = Layout;
 
 export const Dashboard = () => {
 
     const contract = useContract();
-    const { surveyAvailable, getBalance } = useSurvey();
+    const { surveyAvailable, getBalance, getSurveys } = useSurvey();
+    const { available, surveys, selectedSurvey, setAccounts } = useAppContext();
 
+    
+    const {init, data} = selectedSurvey;
 
-    const { available, balance } = useAppContext();
+    const ROPSTEIN = "0x3";
 
-
-    useEffect(() => {    
-        getBalance(contract);
-        surveyAvailable(contract);
+    useEffect(() => {
+        AutoConnect();
     }, []);
 
+    const AutoConnect = () => {         
+        window.ethereum
+        .request({ 
+            method: "eth_requestAccounts",
+            params:[{
+                "chainId": "0x3"
+            }]
+        })        
+        .then( accounts => {            
+            
+            setAccounts(accounts);
+            const currentAccount = accounts[0];
+
+            window.ethereum
+            .request({ method: 'eth_chainId' })
+            .then( chainID => {                    
+                console.log("chainID ", chainID)
+                if (chainID === ROPSTEIN || chainID === "0x539") {          
+                    getSurveys();        
+                    surveyAvailable(contract, currentAccount);
+                    getBalance(contract, currentAccount);  
+                }
+                else{
+                    window.ethereum
+                    .request({
+                        method: 'wallet_switchEthereumChain',
+                        params:[{
+                            "chainId": "0x3"
+                        }]
+                    })
+                    .catch(resp => {
+                        
+                        Modal.error({
+                            title: "Plase change network",            
+                            content: "This dapp only allows connections to Ropstein's network.",    
+                            okText: "Change Network",                               
+                        });    
+            
+                        console.error(resp);
+                    });  
+                }
+            });
+        })
+        .catch(({message}) => {
+            
+            Modal.error({
+                title: "MetaMask Error",            
+                content: message,
+            });   
+        });        
+          
+    }
+
+    const SwitchDisplay = () => { 
+        if (init) {
+
+           return <FormSurvey questions={data} />;
+
+        } else {
+
+            return ( surveys.length === 0 )
+            ? <SurveysNotFound />
+            : <HomeView 
+                surveys={surveys} 
+                available={available}
+              />;
+        }
+    }
+
     return (
-          <Layout>
-                <Header className="header">
-                    <div className="logo" />
-                    <Menu theme="dark" mode="horizontal" >               
-                        <Menu.Item key="MetaMask" icon={<UserOutlined />} style={{ background: "#001529" }} >                            
-                            <ButtonMetamask />
-                        </Menu.Item>   
-                    </Menu>
-                </Header>
-                <Layout>
-                    <Layout style={{ padding: "0 24px 24px" }}>
-                          <PageHeader
-                              ghost={false}           
-                              title=""
-                              subTitle=""
-                              extra={[
-                                `$QUIZ: ${ balance }`
-                              ]}
-                          />          
-                          <Content
-                              className="site-layout-background"
-                              style={{
-                                padding: 24,
-                                margin: 0,
-                                minHeight: 280,
-                              }}
-                          >
-                          </Content>
-                    </Layout>
+        <Layout>
+            <NavBar/>
+            <Layout>
+                <Layout style={{ padding: "0 24px 24px" }}>
+                    <Content
+                        className="site-layout-background"
+                        style={{
+                            padding: 24,
+                            margin: 0,
+                            minHeight: 280,
+                        }}
+                    >
+                        <SwitchDisplay />
+                    </Content>
                 </Layout>
-          </Layout>
+            </Layout>
+        </Layout>
     );
 };
