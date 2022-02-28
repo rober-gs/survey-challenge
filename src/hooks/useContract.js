@@ -1,23 +1,22 @@
 import { useMemo } from 'react';
+import { ethers } from 'ethers';
 import { Contract } from '@ethersproject/contracts';
 import { AddressZero } from '@ethersproject/constants';
-import { useWeb3React } from '@web3-react/core';
 import json from '../contracts/QuizManager.json';
 
 const useContract = () => {
-
-    const {abi} =  json;
-
-    const address = "0xc378d0cac90ee1d296cb6c964751b3913a4ad43f";
-
+    
+    const {abi, address} =  json;  
+    
     if (address === AddressZero || !address) throw Error(`Invalid 'contractAddress' parameter '${address}'.`);
     
-    const { library, account } = useWeb3React();
-    const signerOrProvider = account ? library.getSigner(account).connectUnchecked() : library;
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner()
 
     return useMemo(() => {
-        return new Contract(address, abi, signerOrProvider);
-    }, [address, abi, signerOrProvider]);
+        return new Contract(address, abi, signer);
+    }, [address, abi, signer]);
+
 }
 
 export default useContract;
