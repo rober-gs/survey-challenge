@@ -12,9 +12,10 @@ const useContract = () => {
     
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner()
+    const contract = new Contract(address, abi, signer);
 
     return useMemo(() => {
-        return new Contract(address, abi, signer);
+        return contract
     }, [address, abi, signer]);
 
 }
