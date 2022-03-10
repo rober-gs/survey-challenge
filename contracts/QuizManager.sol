@@ -11,27 +11,18 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 /// @notice Smart Contract for the control of tokens through a survey
 contract QuizManager is ERC20, ERC20Burnable, Ownable {
 
-    /// @dev libraries for utils tools 
-    using Counters for Counters.Counter;
-    /// @notice control for index responses
-    Counters.Counter private id;
-    /// @dev timer for new survey
-    uint public frezz = 24 * 1 hours;
-    /// @notice There is a fee    
+    
+    using Counters for Counters.Counter;    
+    Counters.Counter private id;    
+    uint public frezz = 24 * 1 hours;    
     uint public fee =  1 * 10 ** 18;
-
     struct Response{
         address owner;
         string data;
         uint datetime;
     }
-    /// @notice Emitted when a change is made to the quota.
-    /// @param newFee new declared quote
-    /// @param account account modifying the quota
-    event LogChangeFee(uint256 newFee, address account);
-    /// @notice Emmited when a user add new response.
-    /// @param account account for response survey
-    /// @param response survey data
+    
+    event LogChangeFee(uint256 newFee, address account);    
     event NewResponse(address account, string response);
 
     mapping (address=>uint) lastSurveyDate;
