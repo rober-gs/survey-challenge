@@ -1,6 +1,9 @@
-import { Space } from 'antd';
 import React from 'react'
+import PropTypes from 'prop-types';
+
+import { Space } from 'antd';
 import { SurveyCard } from '../components/Card/SurveyCard'
+
 
 export const HomeView = ({surveys, available}) => {  
     
@@ -23,4 +26,8 @@ export const HomeView = ({surveys, available}) => {
             }
         </Space>
     )
+}
+HomeView.propTypes = {
+    surveys: PropTypes.array.isRequired,
+    available: PropTypes.bool.isRequired
 }

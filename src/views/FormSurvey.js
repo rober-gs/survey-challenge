@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types';
 
 import { Steps, Button, Result, Spin } from 'antd';
 import { CustomInput } from '../components/Input/CustomInput';
@@ -72,8 +73,7 @@ export const FormSurvey = ({questions}) => {
 		
 	}
 		
-	return (
-		  	
+	return (  	
 		(finish || transaction) 
 		?
 			Onfinish()
@@ -102,4 +102,7 @@ export const FormSurvey = ({questions}) => {
 			</div>		
 		</>
 	);
-  };
+};
+FormSurvey.propTypes = {
+    questions: PropTypes.object.isRequired,
+}

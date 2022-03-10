@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useTimer } from 'react-timer-hook';
 
 export const TimerCustom = ({timer, onExpire}) => {
@@ -28,4 +29,9 @@ export const TimerCustom = ({timer, onExpire}) => {
             </div>
         
     )
+}
+
+TimerCustom.propTypes = {
+    timer: PropTypes.number.isRequired,
+    onExpire: PropTypes.func.isRequired
 }

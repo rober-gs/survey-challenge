@@ -1,5 +1,6 @@
   
 import React, { createContext, useContext, useReducer } from 'react';
+import PropTypes from 'prop-types';
 
 const initialContext = {
     accounts: [],
@@ -130,4 +131,8 @@ const TYPES = {
     setReceipt:               'Set Receipt for trasaction',
     setAvailable:             'Obtains the availability surveys', 
     setSelectSurvey:          'Set Data of the selected survey', 
+}
+
+AppContextProvider.propTypes = {
+    children: PropTypes.node.isRequired,
 }

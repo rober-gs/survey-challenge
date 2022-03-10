@@ -9,8 +9,7 @@ export const useSurvey = () => {
 
     const {
         setSurveys,
-        setBalance, 
-        setReceipt,
+        setBalance,         
         setAvailable, 
         setTransaction,
     } = useAppContext();

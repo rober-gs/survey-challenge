@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types';
 
 import { Button, Divider, Image, Radio, Space } from 'antd';
 import { Typography } from 'antd';
@@ -48,9 +49,11 @@ export const CustomInput = ({data,  current, next}) => {
             </Radio.Group>
             <Divider style={{ marginTop:"2px", marginLeft:"12px"}} />
             <Button type='primary' block onClick={()=>next(current, value)}> Done </Button>
-        </Space>
-            
-            
-        
+        </Space>    
 	)
+}
+CustomInput.propTypes = {
+    data: PropTypes.object.isRequired,
+    current: PropTypes.number.isRequired,
+    next: PropTypes.func.isRequired
 }

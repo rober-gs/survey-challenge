@@ -1,10 +1,12 @@
 import React from 'react'
+import PropTypes from 'prop-types';
 
 import { Button, Card } from 'antd';
 import { message, Popconfirm } from 'antd';
 import { CaretRightOutlined } from '@ant-design/icons';
 import { StopOutlined  } from '@ant-design/icons';
 import { useAppContext } from '../../AppContext';
+
 
 const { Meta } = Card;
 
@@ -14,7 +16,7 @@ export const SurveyCard = ( {title, image, questions, available}) => {
 	const { setSelectSurvey } = useAppContext()
 
     const warning = () => {
-    	message.warning('Not available at this time');
+      message.warning('Not available at this time');
     };
 
     const onConfirm = () => {
@@ -59,4 +61,11 @@ export const SurveyCard = ( {title, image, questions, available}) => {
             />
         </Card>
     )
+}
+
+SurveyCard.propTypes = {
+  title: PropTypes.string.isRequired,
+  image: PropTypes.string.isRequired,
+  questions: PropTypes.string.isRequired, 
+  available: PropTypes.bool.isRequired,
 }
